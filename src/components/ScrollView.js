@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 import "../assets/styles/index.scss"
 
@@ -7,6 +7,8 @@ const ScrollView = (props) => {
   const [itemPos, setItemPos] = useState([]);
   const [itemTitles, setItemTitles] = useState([]);
   const [height, setHeight] = useState(100);
+
+  const refNotif = useRef(null);
   
   const scrollHandler = () => {
     const parent = document.getElementById( props.ids[0] ).parentElement;
@@ -55,7 +57,10 @@ const ScrollView = (props) => {
     const totalLen = lastY - topY;
     const totalLenPadding = lastY - topY - padding;
     const rate = totalLenPadding / totalLen;
-    const height = window.innerHeight * props.height;
+    const height = refNotif.current.offsetHeight;
+
+    console.log(refNotif.current.offsetHeight)
+
     for(let i = 0; i < props.ids.length; i++) {
       const perc = ((document.getElementById( props.ids[i] ).offsetTop - topY) / totalLenPadding) * rate
       newPos[i] = {
@@ -64,7 +69,7 @@ const ScrollView = (props) => {
       };
     }
 
-    setHeight(window.innerHeight * props.height)
+    setHeight(height)
 
     setItemPos(newPos);
     scrollHandler();    
@@ -95,7 +100,7 @@ const ScrollView = (props) => {
       <div className="content">
         {props.children}
       </div>
-      <div className="notification" style={{height: height}}>
+      <div className="notification" ref={refNotif}>
           {props.ids.map((id, idx) => (
             <div key={idx} style={{position: 'absolute', right: 8, top: itemPos[idx]?.y}}>
               <span 
@@ -105,7 +110,7 @@ const ScrollView = (props) => {
               </span>
             </div>
           ))}
-          <div className="scroll" style={{height: height}}>
+          <div className="scroll">
           {props.ids.map((id, idx) => (
             <div 
               key={idx}

@@ -17,12 +17,14 @@
         top: 120px;
         font-size: 10px;
         width: 120px;
+        height: 40vh;
     }
     & .scroll {
         position: absolute;
         top: 2px;
         right: 0px;
         width: 2px;
+        height: 100%;
         background: #E4E4E4;
     }
 
